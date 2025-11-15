@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar Inverter Monitor</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <div class="logo">
+            <i class="fas fa-solar-panel"></i>
+            <h1>Solar Inverter Monitor</h1>
+          </div>
+          <div class="system-status">
+            <div class="status-badge" id="operatingMode">
+              <i class="fas fa-cog"></i>
+              <span id="modeText">Initializing...</span>
+            </div>
+          </div>
+          <div class="time-display">
+            <div class="current-time" id="currentTime"></div>
+            <div class="last-update">
+              <i class="fas fa-sync-alt"></i>
+              Status: <span id="lastReadingTime">Initializing</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {% if data.timestamp != 'No data' %}
+      <!-- Main Dashboard -->
+      <main class="dashboard">
+        <div class="dashboard-container">
+          <!-- Inverter at Center -->
+          <div class="inverter-center">
+            <div class="inverter">
+              <!-- <i class="fas fa-sync-alt"></i> -->
+
+              <span>
+                <img src="static/SUNON-ULTRA-2.jpg" alt="" class="inverter-img"
+              /></span>
+            </div>
+            <div class="power-flows">
+              <div class="power-flow grid-to-inverter">
+                <div id="flow-dot-1"></div>
+              </div>
+              <div class="power-flow inverter-to-home">
+                <div id="flow-dot-2"></div>
+              </div>
+              <div class="power-flow solar-to-inverter">
+                <div id="flow-dot-3"></div>
+              </div>
+              <div class="power-flow battery-to-inverter">
+                <div id="flow-dot-4"></div>
+              </div>
+              <div class="power-flow inverter-to-battery">
+                <div id="flow-dot-5"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Left: Grid Section -->
+          <section class="dashboard-section grid-section" data-section="grid">
+            <div class="section-header">
+              <i class="fas fa-broadcast-tower"></i>
+              <h2>K-Electric</h2>
+            </div>
+            <div class="data-display">
+              <div class="data-value active" data-type="voltage">
+                <span id="grid_voltage">{{ data.grid_voltage }}</span>
+              </div>
+              <div class="data-value" data-type="current">
+                <span id="grid_voltage">{{ data.grid_voltage }}</span>
+              </div>
+              <div class="data-value" data-type="power">
+                <span id="grid_power">{{ data.grid_frequency }}</span>
+              </div>
+              <div class="data-value" data-type="detailed">
+                <span id="grid_detailed"
+                  >Frequency{{ data.grid_frequency }}Hz | Volts: {{
+                  data.grid_voltage }}V</span
+                >
+              </div>
+              <div class="data-label">K-Electric Voltage</div>
+            </div>
+          </section>
+
+          <!-- Top Right: Home Section -->
+          <section class="dashboard-section load-section" data-section="home">
+            <div class="section-header">
+              <i class="fas fa-home"></i>
+              <h2>Home</h2>
+            </div>
+            <div class="small-values">
+              <span>Load:</span>
+              <span id="load_percentage"></span><span>%</span>
+            </div>
+            <div class="data-display">
+              <div class="data-value active" data-type="voltage">
+                <span id="ac_output_voltage">{{ data.ac_output_power }}</span>
+              </div>
+              <div class="data-value" data-type="power">
+                <span id="ac_output_power"
+                  >{{ data.output_apparent_power }}</span
+                >
+              </div>
+              <div class="data-value" data-type="current">
+                <span id="load_ampere">A</span>
+              </div>
+              <div class="data-value" data-type="detailed">
+                <span id="home_detailed"
+                  >Watts: {{ data.ac_output_power }}W | Volts: {{
+                  data.ac_output_voltage }}V | Current: {{ data.load_percentage
+                  }}A</span
+                >
+              </div>
+
+              <div class="data-label">Output Voltage</div>
+            </div>
+          </section>
+
+          <!-- Bottom Left: Solar Section -->
+          <section class="dashboard-section solar-section" data-section="solar">
+            <div class="section-header">
+              <i class="fas fa-sun"></i>
+              <h2>Solar</h2>
+            </div>
+            <div class="data-display">
+              <div class="data-value active" data-type="voltage">
+                <span id="pv_voltage">{{ data.pv_voltage }}</span>
+              </div>
+              <div class="data-value" data-type="power">
+                <span id="pv_power">{{ data.pv_power }}</span>
+              </div>
+              <div class="data-value" data-type="current">
+                <span id="pv_charging_power">{{ data.pv_charging_power }}</span>
+              </div>
+              <div class="data-value" data-type="detailed">
+                <span id="solar_detailed"
+                  >Watts: {{ data.pv_power }}W | Volts: {{ data.pv_voltage }}V |
+                  Current: {{ data.pv_charging_power }}A</span
+                >
+              </div>
+              <div class="data-label">PV Voltage</div>
+            </div>
+          </section>
+
+          <!-- Bottom Right: Battery Section -->
+          <section
+            class="dashboard-section battery-section"
+            data-section="battery"
+          >
+            <div class="section-header">
+              <i class="fas fa-battery-half"></i>
+              <h2>Battery</h2>
+            </div>
+            <div class="arrow-container">
+              <div id="arrow-up">
+                <div class="arrow arrow-up"></div>
+              </div>
+              <div id="arrow-down" class="hidden">
+                <div class="arrow arrow-down"></div>
+              </div>
+            </div>
+            <div class="data-display">
+              <div class="data-value active" data-type="voltage">
+                <span id="battery_voltage">{{ data.battery_voltage }}</span>
+              </div>
+              <div class="data-value" data-type="power">
+                <span id="battery_capacity"></span>
+              </div>
+              <div class="data-value" data-type="current">
+                <span id="battery_current"
+                  >{{data.battery_discharge_current if
+                  data.battery_discharge_current else
+                  data.battery_charging_current}} A</span
+                >
+              </div>
+              <div class="data-value" data-type="detailed">
+                <span id="battery_detailed"
+                  >{{ data.battery_capacity }}% | Volts: {{ data.battery_voltage
+                  }}V | Charging/Discharging: {{ data.battery_discharge_current
+                  if data.battery_discharge_current else
+                  data.battery_charging_current }}A</span
+                >
+              </div>
+              <div class="data-label">Battery Voltage</div>
+            </div>
+          </section>
+
+          <!-- Value Switching Controls -->
+        </div>
+        <div>
+          <div class="value-controls">
+            <button class="control-btn active" data-view="voltage">
+              <i class="fas fa-bolt"></i>
+              <span>(V) Voltage</span>
+            </button>
+            <button class="control-btn" data-view="power">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>(W) Power</span>
+            </button>
+            <button class="control-btn" data-view="current">
+              <i class="fas fa-chart-bar"></i>
+              <span>(A) Current</span>
+            </button>
+            <!-- <button class="control-btn" data-view="detailed">
+              <i class="fas fa-chart-bar"></i>
+              <span>Detailed</span>
+            </button> -->
+          </div>
+        </div>
+        <!-- System Information Section -->
+        <section class="system-section">
+          <div class="section-header">
+            <i class="fas fa-info-circle"></i>
+            <h2>System Information</h2>
+          </div>
+          <div class="system-grid">
+            <div class="system-card">
+              <h3>Device Status</h3>
+              <div class="status-code" id="status_code">
+                {{ data.device_status }}
+              </div>
+              <div class="status-description" id="statusDescription">-</div>
+            </div>
+
+            <div class="system-card">
+              <h3>Status Bits</h3>
+              <div class="status-bits" id="status_bits">
+                {{ data.status_bits }}
+              </div>
+              <div class="status-binary" id="status_binary">
+                Binary: {{ data.status_bits }}
+              </div>
+            </div>
+
+            <div class="system-card">
+              <h3>System Info</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span>Battery Offset:</span>
+                  <span id="fan_battery_offset"
+                    >{{ data.fan_battery_offset }}</span
+                  >
+                </div>
+                <div class="info-item">
+                  <span>EEPROM/FW:</span>
+                  <span id="eeprom_fw">{{ data.eeprom_fw }}</span>
+                </div>
+                <div class="info-item">
+                  <span>Reserved:</span>
+                  <span id="reserved">{{ data.reserved }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const controlButtons = document.querySelectorAll(".control-btn");
+          const sections = document.querySelectorAll(".dashboard-section");
+
+          // Initialize battery current calculation
+          updateBatteryCurrent();
+
+          controlButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const viewType = this.getAttribute("data-view");
+
+              // Update active button
+              controlButtons.forEach((btn) => btn.classList.remove("active"));
+              this.classList.add("active");
+
+              // Update all sections to show the selected value type
+              sections.forEach((section) => {
+                const dataValues = section.querySelectorAll(".data-value");
+                const dataLabel = section.querySelector(".data-label");
+
+                dataValues.forEach((value) => {
+                  value.classList.remove("active");
+                  if (value.getAttribute("data-type") === viewType) {
+                    value.classList.add("active");
+
+                    // Update label based on active value
+                    if (viewType === "voltage") {
+                      dataLabel.textContent = getVoltageLabel(
+                        section.getAttribute("data-section")
+                      );
+                    } else if (viewType === "power") {
+                      dataLabel.textContent = getPowerLabel(
+                        section.getAttribute("data-section")
+                      );
+                    } else if (viewType === "detailed") {
+                      dataLabel.textContent = getDetailedLabel(
+                        section.getAttribute("data-section")
+                      );
+                    } else {
+                      dataLabel.textContent = getCurrentLabel(
+                        section.getAttribute("data-section")
+                      );
+                    }
+                  }
+                });
+              });
+            });
+          });
+
+          function getVoltageLabel(section) {
+            const labels = {
+              grid: "K-Electric Voltage",
+              home: "Output Voltage",
+              solar: "PV Voltage",
+              battery: "Battery Voltage",
+            };
+            return labels[section] || "Voltage";
+          }
+
+          function getPowerLabel(section) {
+            const labels = {
+              grid: "K-Electric Frequency",
+              home: "Active Power",
+              solar: "PV Power",
+              battery: "Battery Percentage",
+            };
+            return labels[section] || "Power";
+          }
+
+          function getCurrentLabel(section) {
+            const chargingCurrent = parseFloat(
+              "{{ data.battery_charging_current }}"
+            );
+            const dischargeCurrent = parseFloat(
+              "{{data.battery_discharge_current}}"
+            );
+            const batteryStatus =
+              chargingCurrent > 0
+                ? "Charging"
+                : dischargeCurrent > 0
+                ? "Discharging"
+                : "Resting";
+
+            const labels = {
+              grid: "K-Electric Frequency",
+              home: "Load Percentage",
+              solar: "PV Current",
+              battery: "Battery " + batteryStatus, // This will show "Battery Charging Current" or "Battery Discharging Current"
+            };
+            return labels[section] || "Current";
+          }
+
+          function getDetailedLabel(section) {
+            const labels = {
+              grid: "K-Electric Status",
+              home: "Home Load",
+              solar: "Solar Production",
+              battery: "Battery Status",
+            };
+            return labels[section] || "Details";
+          }
+
+          function updateBatteryCurrent() {
+            // Calculate net battery current (charging positive, discharging negative)
+            const chargingCurrent =
+              parseFloat("{{ data.battery_charging_current }}") || 0;
+            const dischargeCurrent =
+              parseFloat("{{ data.battery_discharge_current }}") || 0;
+            const netCurrent = chargingCurrent - dischargeCurrent;
+
+            const batteryCurrentElement =
+              document.getElementById("battery_current");
+            if (batteryCurrentElement) {
+              batteryCurrentElement.textContent =
+                Math.abs(netCurrent).toFixed(1);
+            }
+
+            // Calculate grid power (simplified)
+            // const gridPowerElement = document.getElementById("grid_power");
+            // if (gridPowerElement) {
+            //   const pvPower = parseFloat("{{ data.pv_power }}") || 0;
+            //   const homePower = parseFloat("{{ data.ac_output_power }}") || 0;
+            //   const batteryPower =
+            //     netCurrent * (parseFloat("{{ data.battery_voltage }}") || 48);
+            //   const gridPower =
+            //     homePower - pvPower - (batteryPower > 0 ? batteryPower : 0);
+            //   gridPowerElement.textContent = Math.abs(gridPower).toFixed(0);
+            // }
+          }
+        });
+      </script>
+      {% else %}
+      <!-- No Data State -->
+      <div class="no-data">
+        <div class="no-data-icon">
+          <i class="fas fa-satellite-dish"></i>
+        </div>
+        <h2>Waiting for Inverter Data</h2>
+        <p>
+          Monitoring system is active and waiting for data from the inverter...
+        </p>
+        <div class="loading-spinner"></div>
+      </div>
+      {% endif %}
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="update-info">
+            <i class="fas fa-clock"></i>
+            Last Updated:
+            <span id="lastUpdateTime">{{ data.last_updated }}</span>
+          </div>
+          <div class="auto-refresh">
+            <i class="fas fa-sync"></i>
+            Auto-refresh in <span id="countdown">5</span>s
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

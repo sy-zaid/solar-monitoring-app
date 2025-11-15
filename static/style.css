@@ -1,0 +1,1223 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #10b981;
+  --solar: #f59e0b;
+  --battery: #3b82f6;
+  --ac: #ef4444;
+  --grid: #8b5cf6;
+  --background: #0f172a;
+  --card-bg: #1e293b;
+  --text: #f8fafc;
+  --text-secondary: #94a3b8;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* background: linear-gradient(135deg, var(--background) 0%, #1e293b 100%); */
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+.header {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo i {
+  font-size: 2.5rem;
+  color: var(--primary);
+  animation: pulse 2s infinite;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--solar));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.time-display {
+  text-align: right;
+}
+
+.current-time {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.last-update {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.last-update i {
+  margin-right: 5px;
+  color: var(--primary);
+}
+
+/* Section Styles */
+.section {
+  margin-bottom: 30px;
+}
+
+.section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.solar-section h2 i {
+  color: var(--solar);
+}
+.battery-section h2 i {
+  color: var(--battery);
+}
+.ac-section h2 i {
+  color: var(--ac);
+}
+.grid-section h2 i {
+  color: var(--grid);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Card Styles */
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.solar-card::before {
+  background: linear-gradient(90deg, var(--solar), transparent);
+}
+.battery-card::before {
+  background: linear-gradient(90deg, var(--battery), transparent);
+}
+.ac-card::before {
+  background: linear-gradient(90deg, var(--ac), transparent);
+}
+.grid-card::before {
+  background: linear-gradient(90deg, var(--grid), transparent);
+}
+.temperature-card::before {
+  background: linear-gradient(90deg, #ec4899, transparent);
+}
+.status-card::before {
+  background: linear-gradient(90deg, #10b981, transparent);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+.card-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unit {
+  font-size: 1.2rem;
+  font-weight: 400;
+  /* margin-left: 2px; */
+  opacity: 1;
+}
+
+.card-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.card-details {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 5px;
+}
+
+.battery-details {
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+/* No Data State */
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-data-icon {
+  font-size: 4rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.no-data h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+
+.no-data p {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Footer */
+.footer {
+  margin-top: auto;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.footer-content i {
+  margin-right: 5px;
+}
+
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#countdown {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .time-display {
+    text-align: center;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-value {
+    font-size: 2rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+
+  .current-time {
+    font-size: 1.2rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card-value {
+    font-size: 1.8rem;
+  }
+}
+
+/* System Status Badge */
+.system-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  background: linear-gradient(135deg, var(--primary), #059669);
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.status-badge i {
+  font-size: 0.8rem;
+}
+
+/* Operating Mode Colors */
+.status-badge.line-mode {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.status-badge.battery-mode {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.status-badge.standby-mode {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.status-badge.power-on {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.status-badge.ke-mode {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* System Information Section */
+.system-section {
+  margin-bottom: 30px;
+}
+
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.system-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.system-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.system-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: var(--text);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 8px;
+}
+
+.status-code {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+  margin: 10px 0;
+}
+
+.status-description {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-bits {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--solar);
+  text-align: center;
+  margin: 10px 0;
+  font-family: "Courier New", monospace;
+}
+
+.status-binary {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-family: "Courier New", monospace;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item span:first-child {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.info-item span:last-child {
+  color: var(--text);
+  font-family: "Courier New", monospace;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 1024px) {
+  .system-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .system-status {
+    order: 2;
+  }
+
+  .time-display {
+    order: 3;
+  }
+
+  .status-badge {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .system-card {
+    padding: 20px;
+  }
+
+  .status-code {
+    font-size: 1.5rem;
+  }
+
+  .status-bits {
+    font-size: 1.2rem;
+  }
+}
+
+/* Dashboard Styles */
+.dashboard {
+  padding: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  /* background-color: #00ff6a; */
+}
+
+.dashboard-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 5rem;
+  /* background-color: #1d4ed8; */
+  margin-bottom: 2rem;
+  min-height: 400px;
+}
+
+/* Inverter Center */
+.inverter-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px; /* container size (affects line positioning) */
+  height: 320px;
+  pointer-events: none;
+  z-index: 1000;
+  /* background-color: #0f172a; */
+}
+
+.inverter {
+  /* --size: 100px; */
+  width: 110px;
+  height: 150px;
+  background: transparent;
+  overflow: hidden;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: 3px solid white;
+  position: absolute;
+  top: 50%;
+  z-index: 2000;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.inverter i {
+  font-size: 2rem;
+  animation: rotate 4s linear infinite;
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- power flows container (for absolute positioned lines) --- */
+.power-flows {
+  position: absolute;
+  inset: 0;
+
+  rotate: -45deg;
+  z-index: 500;
+}
+
+/* generic flow line */
+.power-flow {
+  position: absolute;
+  background: #2ecc71;
+  border-radius: 2px;
+  overflow: visible;
+  z-index: 501;
+}
+
+/* generic dot */
+.power-flow .flow-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #2ecc71;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  /* z-index: 999; above inverter so you see them approach */
+}
+
+/* ----- Specific lines ----- */
+/* lengths configurable with --len */
+.grid-to-inverter {
+  /* horizontal line from left -> inverter center */
+  --len: 80px; /* length of line */
+  height: 4px;
+  width: var(--len);
+  left: calc(50% - 140px); /* position left side (adjust spacing) */
+  top: 50%;
+  transform: translateY(-50%);
+}
+.grid-to-inverter .flow-dot {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: gridFlow 1.6s linear infinite;
+}
+
+.inverter-to-home {
+  --len: 80px;
+  height: 4px;
+  width: var(--len);
+  left: calc(50% + 60px); /* start at inverter right edge */
+  top: 50%;
+  transform: translateY(-50%);
+}
+.inverter-to-home .flow-dot {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: homeFlow 1.6s linear infinite;
+}
+
+.solar-to-inverter {
+  --len: 80px;
+  width: 4px;
+  height: var(--len);
+  left: 50%;
+  top: calc(50% - 140px); /* above inverter */
+  transform: translateX(-50%);
+}
+.solar-to-inverter .flow-dot {
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  animation: solarFlow 1.6s linear infinite;
+}
+
+.battery-to-inverter {
+  --len: 80px;
+  width: 4px;
+  height: var(--len);
+  left: 50%;
+  top: calc(50% + 60px); /* below inverter */
+  transform: translateX(-50%);
+}
+.battery-to-inverter .flow-dot {
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  animation: batteryFlow 1.6s linear infinite;
+}
+
+.inverter-to-battery {
+  --len: 80px;
+  width: 4px;
+  height: var(--len);
+  left: 50%;
+  color: red;
+  top: calc(50% + 60px); /* below inverter */
+  transform: translateX(-50%);
+}
+.inverter-to-battery .flow-dot {
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  animation: batteryFlowDown 1.6s linear infinite;
+}
+/* --- Animations:
+       Grid, Solar, Battery should move TOWARD the inverter (i.e. end near the inverter center).
+       Home remains moving AWAY from inverter (outwards). --- */
+
+/* Grid: dot moves rightwards along the line toward inverter */
+@keyframes gridFlow {
+  0% {
+    transform: translate(-50%, -50%) translateX(0);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateX(calc(var(--len) - 8px));
+    opacity: 0;
+  }
+}
+
+/* Home: stays moving rightwards away from inverter (inverter -> home) */
+@keyframes homeFlow {
+  0% {
+    transform: translate(-50%, -50%) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateX(calc(var(--len) - 8px));
+    opacity: 0;
+  }
+}
+
+/* Solar: dot moves DOWN (toward inverter) */
+@keyframes solarFlow {
+  0% {
+    transform: translate(-50%, -50%) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(calc(var(--len) - 8px));
+    opacity: 0;
+  }
+}
+
+/* Battery: dot moves UP (toward inverter) -> start at bottom of its line and travel up */
+@keyframes batteryFlow {
+  0% {
+    transform: translate(-50%, -50%) translateY(calc(var(--len) - 8px));
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Battery: dot moves DOWN (toward inverter) -> start at bottom of its line and travel up */
+@keyframes batteryFlowDown {
+  0% {
+    transform: translate(-50%, -50%) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(calc(var(--len) - 8px));
+    opacity: 1;
+  }
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+  background: white;
+  border-radius: 16px;
+  /* min-height: 250px; */
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8ecef;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  z-index: 5;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.section-header i {
+  font-size: 1.25rem;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: white;
+}
+
+.section-header h2 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Section-specific header colors */
+.grid-section .section-header i {
+  background: #3498db;
+}
+.load-section .section-header i {
+  background: #e74c3c;
+}
+.solar-section .section-header i {
+  background: #f1c40f;
+}
+.battery-section .section-header i {
+  background: #2ecc71;
+}
+
+/* Data Display */
+.data-display {
+  flex: 1;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  min-height: 100px;
+}
+
+.data-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  /* background-color: #00ff6a; */
+  display: none;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.data-value.active {
+  display: flex;
+}
+
+.data-value .unit {
+  font-size: 1rem;
+  color: #6d7272;
+  font-weight: 500;
+}
+
+.data-label {
+  font-size: 0.9rem;
+  color: #5d6d7e;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.small-values {
+  color: #737474;
+  font-size: 16px;
+  font-weight: 500;
+}
+/* Value Controls */
+.value-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 50px;
+  color: #6c757d;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.control-btn.active {
+  background: #3498db;
+  border-color: #3498db;
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.control-btn i {
+  font-size: 1rem;
+}
+
+/* System Information Section */
+.system-section {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8ecef;
+  margin-top: 2rem;
+}
+
+.system-section .section-header i {
+  background: #95a5a6;
+}
+
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.system-card {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #95a5a6;
+}
+
+.system-card h3 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.status-code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3498db;
+  margin-bottom: 0.5rem;
+}
+
+.status-description {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.status-bits {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e74c3c;
+  margin-bottom: 0.5rem;
+}
+
+.status-binary {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-family: monospace;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e8ecef;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item span:first-child {
+  font-weight: 500;
+  color: #5d6d7e;
+}
+
+.info-item span:last-child {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    gap: 1.5rem;
+  }
+
+  .data-value {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    min-height: 350px;
+  }
+
+  .dashboard {
+    padding: 0rem;
+  }
+
+  .dashboard-section {
+    padding: 1rem;
+  }
+
+  .data-value {
+    font-size: 1.5rem;
+  }
+
+  .section-header h2 {
+    font-size: 1rem;
+  }
+
+  .section-header i {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .value-controls {
+    gap: 0.5rem;
+  }
+
+  .control-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    min-height: 300px;
+    gap: 1.5rem;
+  }
+
+  .data-display{
+    min-height: 80px;
+  }
+  .data-value {
+    font-size: 1.3rem;
+  }
+
+  .inverter-center {
+    width: 200px;
+    height: 200px;
+  }
+  .inverter {
+    width: 80px;
+    height: 100px;
+  }
+
+  .data-label {
+    font-size: 0.8rem;
+  }
+
+  .value-controls {
+    flex-wrap: wrap;
+  }
+
+  .control-btn {
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
+  }
+
+  .system-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inverter-img {
+  width: 100%;
+  height: 100%;
+}
+
+.load-section,
+.grid-section {
+  margin-bottom: 80px;
+}
+
+.solar-section,
+.battery-section {
+  margin-top: 80px;
+}
+
+/* ----- ARROWS FOR BATTERY CHARGING STATUS */
+.arrow-container {
+  color: black;
+  margin: 0;
+  padding: 0;
+}
+.arrow {
+  width: 0;
+  height: 0;
+  margin: 10px auto 0px auto;
+  border-left: 0.75rem solid transparent;
+  border-right: 0.75rem solid transparent;
+  transition: transform 0.3s ease;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Up Arrow (Green for charging) */
+.arrow-up {
+  border-bottom: 1rem solid #ff4b4b;
+  animation: upPulse 1.5s infinite ease-in-out;
+}
+
+/* Down Arrow (Red for discharging) */
+.arrow-down {
+  border-top: 1rem solid #00ff6a;
+  animation: downPulse 1.5s infinite ease-in-out;
+}
+
+/* Upward flow animation */
+@keyframes upPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 0.6;
+  }
+}
+
+/* Downward flow animation */
+@keyframes downPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 0.6;
+  }
+}
+
+/* Class for hiding elements */
+.hidden {
+  display: none;
+}
+
+.battery-section > .data-display {
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes pulseRed {
+  0% { background-color: rgb(209, 2, 2); }
+  50% { background-color: darkred; }
+  100% { background-color: rgb(209, 2, 2); }
+}
+
+@keyframes pulseYellow {
+  0% { background-color: rgb(216, 216, 4); }
+  50% { background-color: gold; }
+  100% { background-color: rgb(216, 216, 4); }
+}
+
+/* These classes control the animation */
+.pulse-red {
+  animation: pulseRed 1.5s infinite;
+}
+.pulse-yellow {
+  animation: pulseYellow 1.5s infinite;
+}
