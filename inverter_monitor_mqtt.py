@@ -7,19 +7,23 @@ from datetime import datetime
 import paho.mqtt.client as mqtt
 import requests
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuration
-debug_directory = r"C:\Users\Vertika Developer\WatchPower\log\debug"
+debug_directory = os.getenv("DEBUG_DIRECTORY")
 
 # mqtt_client = mqtt.Client()
 # mqtt_client.connect('localhost',1883)
 # mqtt_client.publish('Hello',100)
 
-# WaSMS.net Configuration - Based on API documentation
-WASMS_API_URL = "https://sys.wasms.net/api/send/whatsapp"
-WASMS_API_SECRET = "38753b56d4f8b503e5ef0d05b4aa33f690fefd9e"  # Paste your secret from Tools -> API Keys
-WASMS_ACCOUNT_ID = "1761998093d7322ed717dedf1eb4e6e52a37ea7bcd6905f50dc5b05"  # Get from /get/wa.accounts or dashboard
 
+WASMS_API_URL = os.getenv("WASMS_API_URL")
+WASMS_API_SECRET = os.getenv("WASMS_API_SECRET")
+WASMS_ACCOUNT_ID = os.getenv("WASMS_ACCOUNT_ID")
+
+# print(debug_directory,WASMS_API_URL,WASMS_API_SECRET,WASMS_ACCOUNT_ID)
 
 def get_todays_qpigs_path():
     """Get today's QPIGS file path"""
