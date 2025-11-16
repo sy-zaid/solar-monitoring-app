@@ -108,12 +108,12 @@ def get_whatsapp_accounts():
         print(f"❌ Error getting WhatsApp accounts: {e}")
         return None
 
-def send_wasms_whatsapp(message):
+def send_wasms_whatsapp(message,send_others = False):
     """Send WhatsApp message via WaSMS.net API to multiple recipients"""
-    recipients = [
-        "+923055663545",  # ✅ Add all target numbers here in E.164 format
-    ]
-    
+    recipients = [os.getenv("SEND_WASMS_NUM1")]
+    if send_others:
+        recipients += [os.getenv("SEND_WASMS_NUM2")]
+    print(recipients)
     success_count = 0
     for number in recipients:
         try:
@@ -145,7 +145,7 @@ def send_wasms_whatsapp(message):
     print(f"📊 WhatsApp message summary: {success_count}/{len(recipients)} successful")
     return success_count > 0
 
-def send_alert(topic, message_code):
+def send_alert(topic, message_code, send_others = False):
     """Send alert to all devices (MQTT + WhatsApp)"""
     successful_sends = 0
     
@@ -190,7 +190,6 @@ def check_alerts(parsed_data):
     global last_alert_sent,grid_status
     global cond_1_count,cond_2_count,cond_3_count,cond_6_count
     current_time = time.time()
-    alerts_triggered = []
     
     try:
         # Convert string values to appropriate types
@@ -200,13 +199,14 @@ def check_alerts(parsed_data):
         grid_voltage = float(parsed_data.get('grid_voltage', 0))
         pv_power = float(parsed_data.get('pv_power',0))
         battery_discharge_current = float(parsed_data.get('battery_discharge_current',0))
+        battery_charging_current = float(parsed_data.get('battery_charging_current',0))
 
         # ---------------  Alert 01: High Draining Fast (e.g., > 25A), cond_1_count identifies number of times continous alerts sent
 
         if battery_discharge_current > 25 and cond_1_count < 2 and grid_voltage < 10 and pv_power < 10: 
             if (last_alert_sent['battery_drain_fast'] is None or 
                 current_time - last_alert_sent['battery_drain_fast'] > 3):  # 3 sec cooldown
-                send_alert('01',f"{ac_output_power}Watts - {battery_discharge_current}A is higher than normal usage and battery will drop faster. Please reduce the load")
+                send_alert('01',f"Current Load: {ac_output_power}Watts\nBattery Discharging At: {battery_discharge_current}A\nIt is higher than normal usage and battery will drop faster. Please reduce the load",True)
                 last_alert_sent['battery_drain_fast'] = current_time
                 cond_1_count += 1
 
@@ -222,7 +222,7 @@ def check_alerts(parsed_data):
             if (last_alert_sent['battery_drain_limit'] is None or
                 current_time - last_alert_sent['battery_drain_limit'] > 3):  # 3 secs cooldown
                 # alerts_triggered.append(f"ALERT! 🚨 BATTERY LOAD LIMIT:\n{battery_discharge_current}A ")
-                send_alert('02',f"{ac_output_power}Watts - {battery_discharge_current}A exceeds 90A limit and battery might be damaged if exceeds 100A. Please reduce the load")
+                send_alert('02',f"Current Load: {ac_output_power}Watts\nBattery Discharging At: {battery_discharge_current}A\nIt exceeds 90A limit and battery might be damaged if exceeds 100A. Please reduce the load",True)
                 last_alert_sent['battery_drain_limit'] = current_time
                 cond_2_count += 1
         
@@ -232,11 +232,11 @@ def check_alerts(parsed_data):
         
         # --------------- 
         # --------------- Alert 03: Low Battery (e.g., < 23.0)
-        if battery_voltage < 23.0:
+        if battery_voltage < 23.0 and battery_voltage > 19.0:
             if (last_alert_sent['low_battery'] is None or 
                 current_time - last_alert_sent['low_battery'] > 3):  # 3 secs cooldown
                 # alerts_triggered.append(f"WARNING! ⚠️ LOW BATTERY:\nBattery at {battery_voltage}V - It will shutdown at 21.0V! Reduce the load to keep running for a bit longer")
-                send_alert('03',f"{ac_output_power}Watts - {battery_discharge_current}A\nBattery at {battery_voltage}V - It will shutdown at 21.0V! Reduce the load to keep running for a bit longer")
+                send_alert('03',f"Current Load: {ac_output_power}Watts\nBattery Discharging At: {battery_discharge_current}A\nBattery Voltage: {battery_voltage}V\nIt will shutdown at 21.0V! Reduce the load to keep running for a bit longer",True)
                 last_alert_sent['low_battery'] = current_time
 
         # --------------- 
@@ -244,7 +244,7 @@ def check_alerts(parsed_data):
         if grid_voltage == 0 and grid_status == True:
             if (last_alert_sent['grid_down'] is None or 
                 current_time - last_alert_sent['grid_down'] > 3):
-                send_alert('04',f"{ac_output_power}Watts - {battery_discharge_current}A")
+                send_alert('04',f"Current Load: {ac_output_power}Watts\nBattery Charging At: {battery_charging_current}A\nBattery Discharging At: {battery_discharge_current}A")
                 last_alert_sent['grid_down'] = current_time
                 grid_status = False
 
@@ -253,15 +253,15 @@ def check_alerts(parsed_data):
         if grid_voltage > 210 and grid_status == False:
             if (last_alert_sent['grid_up'] is None or
                 current_time - last_alert_sent['grid_up'] > 3):
-                send_alert('05',f"{ac_output_power}Watts - {battery_discharge_current}A")
+                send_alert('05',f"Current Load: {ac_output_power}Watts\nBattery Charging At: {battery_charging_current}A\nBattery Discharging At: {battery_discharge_current}A")
                 last_alert_sent['grid_up'] = current_time
                 grid_status = True
         
         # ---------------  Alert 06: Insufficient Solar Power 
-        if battery_discharge_current >= 3.0 and battery_discharge_current <= 10.0 and cond_6_count <= 2 and grid_voltage < 10 and pv_power < 800 and ac_output_power > 500 and ac_output_power < 1000: 
+        if battery_discharge_current >= 5.0 and battery_discharge_current <= 10.0 and cond_6_count <= 2 and grid_voltage < 10 and pv_power < 800 and ac_output_power > 500 and ac_output_power < 1000: 
             if (last_alert_sent['insufficient_solar_power'] is None or 
                 current_time - last_alert_sent['insufficient_solar_power'] > 3):  # 3 secs cooldown
-                send_alert('06',f"PV Power: {pv_power}Watts - {battery_discharge_current}A\nPlease turn off the fridges or other load.")
+                send_alert('06',f"Current Load: {ac_output_power}Watts\nComing from Solar: {pv_power}Watts\nBattery Discharging At: {battery_discharge_current}A\nPlease turn off the fridges or other extra load.",True)
                 last_alert_sent['insufficient_solar_power'] = current_time
                 cond_6_count += 1
 

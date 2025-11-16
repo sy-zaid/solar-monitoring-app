@@ -169,7 +169,7 @@ function updateDashboard(data) {
   // Operating Mode
   updateOperatingMode(data.device_status);
 
-  showUpdateIndicator();
+  
   // console.log("✅ Dashboard update completed");
 }
 
@@ -320,37 +320,6 @@ function highlightUpdate(element) {
   }, 1000);
 }
 
-// Show update indicator
-function showUpdateIndicator() {
-  const existingIndicator = document.querySelector(".update-indicator");
-  if (existingIndicator) {
-    existingIndicator.remove();
-  }
-
-  const indicator = document.createElement("div");
-  indicator.className = "update-indicator";
-  indicator.innerHTML = '<i class="fas fa-check"></i> Data Updated';
-  indicator.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 10px 15px;
-        border-radius: 5px;
-        z-index: 1000;
-        animation: slideIn 0.3s ease-out;
-        font-size: 14px;
-    `;
-
-  document.body.appendChild(indicator);
-
-  setTimeout(() => {
-    if (indicator.parentNode) {
-      indicator.remove();
-    }
-  }, 2000);
-}
 
 // Debug function to check ALL elements
 function checkAllElements() {

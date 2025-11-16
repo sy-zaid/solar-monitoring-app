@@ -222,51 +222,7 @@
           </div>
         </div>
         <!-- System Information Section -->
-        <section class="system-section">
-          <div class="section-header">
-            <i class="fas fa-info-circle"></i>
-            <h2>System Information</h2>
-          </div>
-          <div class="system-grid">
-            <div class="system-card">
-              <h3>Device Status</h3>
-              <div class="status-code" id="status_code">
-                {{ data.device_status }}
-              </div>
-              <div class="status-description" id="statusDescription">-</div>
-            </div>
-
-            <div class="system-card">
-              <h3>Status Bits</h3>
-              <div class="status-bits" id="status_bits">
-                {{ data.status_bits }}
-              </div>
-              <div class="status-binary" id="status_binary">
-                Binary: {{ data.status_bits }}
-              </div>
-            </div>
-
-            <div class="system-card">
-              <h3>System Info</h3>
-              <div class="info-grid">
-                <div class="info-item">
-                  <span>Battery Offset:</span>
-                  <span id="fan_battery_offset"
-                    >{{ data.fan_battery_offset }}</span
-                  >
-                </div>
-                <div class="info-item">
-                  <span>EEPROM/FW:</span>
-                  <span id="eeprom_fw">{{ data.eeprom_fw }}</span>
-                </div>
-                <div class="info-item">
-                  <span>Reserved:</span>
-                  <span id="reserved">{{ data.reserved }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        
       </main>
 
       <script>
